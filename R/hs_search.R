@@ -151,7 +151,8 @@ hs_search_handler <- function(limit, offset, sort, order, uri, user, text, group
   formatted_url <- httr::build_url(hs_base_url_list)
 
   # GET the URL
-  httr::GET(formatted_url, httr::accept_json())
+  httr::GET(formatted_url, httr::accept_json(),  httr::add_headers(Authorization = paste0("Bearer ", token))
+           )
 }
 
 hs_search_results <- function(hs_search_response) {
