@@ -52,9 +52,9 @@
 #' hs_search(custom = list(uri.parts = "programminghistorian"))
 #' @export
 hs_search <- function(limit = NULL, offset = NULL, sort = "updated", order = "asc",
-                      uri = NULL, user = NULL, text = NULL, any = NULL, custom = list()) {
+                      uri = NULL, user = NULL, text = NULL, group = NULL, any = NULL, custom = list()) {
   query_response <- hs_search_handler(limit[1], offset[1], sort[1], order[1],
-                                      uri[1], user[1], text[1], any[1], custom)
+                                      uri[1], user[1], text[1], group[1], any[1], custom)
   hs_search_results(query_response)
 }
 
@@ -75,7 +75,7 @@ hs_search <- function(limit = NULL, offset = NULL, sort = "updated", order = "as
 #' }
 #' @export
 hs_search_all <- function(sort = "updated", order = "asc", uri = NULL,
-                          user = NULL, text = NULL, any = NULL, custom = list(), pagesize = 200,
+                          user = NULL, text = NULL, group = NULL, any = NULL, custom = list(), pagesize = 600,
                           progress = interactive()) {
 
   # pagesize <- validate_pagesize(pagesize)
@@ -83,7 +83,7 @@ hs_search_all <- function(sort = "updated", order = "asc", uri = NULL,
   # Get a first page of results in order to assess how large the total download
   # will be
   first_page <- hs_search_handler(limit = pagesize, offset = 0, sort, order, uri,
-                                  user, text, any, custom)
+                                  user, text, group, any, custom)
 
   total_results <- num_results(first_page)
 
@@ -103,12 +103,12 @@ hs_search_all <- function(sort = "updated", order = "asc", uri = NULL,
     pager <- function(x) {
       utils::setTxtProgressBar(pb, x)
       hs_search_handler(limit = pagesize, offset = x, sort, order, uri, user, text,
-                        any, custom)
+                        group, any, custom)
     }
   } else {
     pager <- function(x) {
       hs_search_handler(limit = pagesize, offset = x, sort, order, uri, user, text,
-                        any, custom)
+                        group, any, custom)
     }
   }
 
@@ -127,7 +127,7 @@ hs_search_all <- function(sort = "updated", order = "asc", uri = NULL,
 # Internal search functions ----
 
 # Internal handler that constructs and fires the appropriate URL.
-hs_search_handler <- function(limit, offset, sort, order, uri, user, text, any,
+hs_search_handler <- function(limit, offset, sort, order, uri, user, text, group, any,
                               custom) {
 
   # Check arguments for validity before making query
