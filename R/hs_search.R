@@ -146,6 +146,7 @@ hs_search_handler <- function(limit, offset, sort, order, uri, user, text, any,
   hs_base_url_list$query$uri <- uri
   hs_base_url_list$query$user <- user
   hs_base_url_list$query$text <- text
+  hs_base_url_list$query$text <- group
   hs_base_url_list$query$any <- any
   formatted_url <- httr::build_url(hs_base_url_list)
 
